@@ -1,0 +1,56 @@
+{
+  "approved_sites": [
+    {
+      "site_id": "Site B",
+      "cost": 600000.0,
+      "total_covered": [
+        "Barangay 2",
+        "Barangay 4",
+        "Barangay 3",
+        "Barangay 5"
+      ],
+      "unique_contribution": [
+        "Barangay 2",
+        "Barangay 3",
+        "Barangay 4",
+        "Barangay 5"
+      ]
+    },
+    {
+      "site_id": "Site D",
+      "cost": 400000.0,
+      "total_covered": [
+        "Barangay 6",
+        "Barangay 1"
+      ],
+      "unique_contribution": [
+        "Barangay 6",
+        "Barangay 1"
+      ]
+    }
+  ],
+  "rejected_sites": [
+    {
+      "site_id": "Site A",
+      "cost": 800000.0,
+      "covered_barangays": [
+        "Barangay 2",
+        "Barangay 3",
+        "Barangay 1"
+      ],
+      "reason": "Redundant coverage (All target barangays already served by selected sites)"
+    },
+    {
+      "site_id": "Site C",
+      "cost": 500000.0,
+      "covered_barangays": [
+        "Barangay 6",
+        "Barangay 4",
+        "Barangay 5"
+      ],
+      "reason": "Redundant coverage (All target barangays already served by selected sites)"
+    }
+  ],
+  "total_cost": 1000000.0,
+  "total_sites": 2
+}
