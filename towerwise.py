@@ -27,7 +27,7 @@ def run_towerwise_optimizer(uncovered_barangays, candidate_sites):
     iteration = 1
     while U:
         print(f"\n--- Iteration {iteration} ---")
-        print(f"Remaining uncovered barangays: {len(U)}")
+        print(f"Remaining uncovered barangays: {len(U)} : {U}")
         
         best_site = None
         best_ratio = float('inf')
@@ -47,7 +47,9 @@ def run_towerwise_optimizer(uncovered_barangays, candidate_sites):
             print(f"  Site {site_id}: ₱{cost:,.2f} / {len(new_coverage)} new barangays = ₱{ratio:,.2f} per barangay")
             
             # Local Selection Choice: Find the argmin ratio
-            if ratio < best_ratio:
+            if ((ratio < best_ratio) or 
+            (ratio == best_ratio and len(new_coverage) > len(best_new_coverage)) or 
+            (ratio == best_ratio and len(new_coverage) == len(best_new_coverage) and cost < best_site[2])):
                 best_ratio = ratio
                 best_site = (site_id, covered_bgrys, cost)
                 best_new_coverage = new_coverage
@@ -62,7 +64,7 @@ def run_towerwise_optimizer(uncovered_barangays, candidate_sites):
         # Step 3: State Update
         site_id, covered_bgrys, cost = best_site
         
-        print(f"\n✓ Selected Site {site_id}: ₱{cost:,.2f} covering {len(best_new_coverage)} new barangay(s)")
+        print(f"\nSelected site {site_id}: ₱{cost:,.2f} covering {len(best_new_coverage)} new barangay(s)")
         
         # Record the breakdown data before updating U (crucial for your UI report)
         approved_sites.append({
@@ -86,7 +88,6 @@ def run_towerwise_optimizer(uncovered_barangays, candidate_sites):
             "site_id": site_id,
             "cost": cost,
             "covered_barangays": list(covered_bgrys),
-            "reason": "Redundant coverage (All target barangays already served by selected sites)"
         })
 
     return approved_sites, rejected_sites_report
@@ -109,13 +110,13 @@ def display_results(approved_sites, rejected_sites_report, total_barangays):
     for site in approved_sites:
         all_covered.update(site["unique_contribution"])
     
-    print(f"\n📊 SUMMARY:")
-    print(f"  • Total approved sites: {total_sites}")
-    print(f"  • Total cost: ₱{total_cost:,.2f}")
-    print(f"  • Barangays covered: {len(all_covered)}/{total_barangays}")
+    print("\nSummary:")
+    print(f"  - Total approved sites: {total_sites}")
+    print(f"  - Total cost: ₱{total_cost:,.2f}")
+    print(f"  - Barangays covered: {len(all_covered)}/{total_barangays}")
     
     # Per-site breakdown
-    print(f"\n📡 APPROVED SITES (in selection order):")
+    print(f"\nApproved sites (in selection order):")
     print("-"*70)
     for i, site in enumerate(approved_sites, 1):
         print(f"\n  Site {i}: {site['site_id']}")
@@ -126,13 +127,13 @@ def display_results(approved_sites, rejected_sites_report, total_barangays):
     
     # Unapproved sites report
     if rejected_sites_report:
-        print(f"\n🚫 UNAPPROVED SITES:")
+        print(f"\nUnapproved sites:")
         print("-"*70)
+        print(f"\nReason: Redundancy, other sites cost less and offer a greater or equal coverage")
         for site in rejected_sites_report:
             print(f"\n  Site: {site['site_id']}")
             print(f"    Cost: ₱{site['cost']:,.2f}")
             print(f"    Would cover: {', '.join(site['covered_barangays'])}")
-            print(f"    Reason: {site['reason']}")
     
     print("\n" + "="*70)
 
@@ -228,7 +229,7 @@ def save_results_to_json(approved_sites, rejected_sites, output_filepath):
     try:
         with open(output_filepath, 'w', encoding='utf-8') as file:
             json.dump(results, file, indent=2, ensure_ascii=False)
-        print(f"\n✓ Results saved to: {output_filepath}")
+        print(f"\nResults saved to: {output_filepath}")
     except Exception as e:
         print(f"Warning: Could not save results to file. Error: {e}")
 
@@ -266,7 +267,7 @@ def create_sample_json(filepath):
     try:
         with open(filepath, 'w', encoding='utf-8') as file:
             json.dump(sample_data, file, indent=2, ensure_ascii=False)
-        print(f"✓ Sample JSON file created at: {filepath}")
+        print(f"Sample JSON file created at: {filepath}")
     except Exception as e:
         print(f"Error creating sample file: {e}")
 
@@ -283,7 +284,7 @@ def main():
     # Check command line arguments
     if len(sys.argv) > 1:
         json_file = sys.argv[1]
-        print(f"\n📂 Loading configuration from: {json_file}")
+        print(f"\nLoading configuration from: {json_file}")
         barangays, candidate_sites = load_from_json(json_file)
     else:
         # Interactive mode - ask for file path
@@ -311,13 +312,13 @@ def main():
             barangays, candidate_sites = load_from_json(json_file)
     
     # Display loaded data summary
-    print(f"\n✓ Loaded {len(barangays)} barangays:")
+    print(f"\nLoaded {len(barangays)} barangays:")
     for bgry in barangays:
-        print(f"  • {bgry}")
+        print(f"  - {bgry}")
     
-    print(f"\n✓ Loaded {len(candidate_sites)} candidate sites:")
+    print(f"\nLoaded {len(candidate_sites)} candidate sites:")
     for site_id, covered, cost in candidate_sites:
-        print(f"  • {site_id}: ₱{cost:,.2f} - covers {len(covered)} barangay(s)")
+        print(f"  - {site_id}: ₱{cost:,.2f} - covers {len(covered)} barangay(s)")
     
     # Run optimizer
     print("\n" + "="*70)
@@ -330,14 +331,14 @@ def main():
     display_results(approved_sites, rejected_sites, len(barangays))
     
     # Ask to save results
-    save_choice = input("\n💾 Save results to JSON file? (y/n): ").strip().lower()
+    save_choice = input("\nSave results to JSON file? (y/n): ").strip().lower()
     if save_choice == 'y':
         output_file = input("Enter output filename (e.g., results.json): ").strip()
         if not output_file:
             output_file = "towerwise_results.json"
         save_results_to_json(approved_sites, rejected_sites, output_file)
     
-    print("\n✓ TowerWise optimization complete!")
+    print("\nTowerWise optimization complete!")
 
 
 if __name__ == "__main__":
