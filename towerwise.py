@@ -3,86 +3,61 @@ import os
 import sys
 from pathlib import Path
 
+
 def run_towerwise_optimizer(uncovered_barangays, candidate_sites):
     """
     Executes the Greedy Approximation for Weighted Set Cover from scratch.
-    
+
     Inputs:
         uncovered_barangays (set): Set U of all target barangays.
         candidate_sites (list): List of tuples (site_id, covered_frozenset, cost).
-        
+
     Returns:
         approved_sites (list): List of selected site data for the final recommendation.
         unapproved_sites (list): List of rejected sites with reasons for transparency.
     """
-    # Initialize your data structures as proposed
-    U = set(uncovered_barangays)  # Copying to avoid mutating the original input
+    U = set(uncovered_barangays)
     candidates = list(candidate_sites)
     approved_sites = []
-    
-    # Track metrics for the final "Unapproved Site Report" feature
     rejected_sites_report = []
 
-    # Main Greedy Loop: Repeat until all barangays are covered
-    iteration = 1
     while U:
-        print(f"\n--- Iteration {iteration} ---")
-        print(f"Remaining uncovered barangays: {len(U)} : {U}")
-        
         best_site = None
         best_ratio = float('inf')
         best_new_coverage = set()
 
-        # Step 1: Evaluate the local choice for every remaining candidate site
         for site_id, covered_bgrys, cost in candidates:
-            # Compute set intersection: new_coverage = |t.barangays ∩ U|
             new_coverage = covered_bgrys.intersection(U)
-            
-            # Skip if this site offers absolutely no new coverage
+
             if len(new_coverage) == 0:
                 continue
-            
-            # Compute cost-effectiveness ratio: cost / size of new coverage
+
             ratio = cost / len(new_coverage)
-            print(f"  Site {site_id}: ₱{cost:,.2f} / {len(new_coverage)} new barangays = ₱{ratio:,.2f} per barangay")
-            
-            # Local Selection Choice: Find the argmin ratio
-            if ((ratio < best_ratio) or 
-            (ratio == best_ratio and len(new_coverage) > len(best_new_coverage)) or 
+
+            if ((ratio < best_ratio) or
+            (ratio == best_ratio and len(new_coverage) > len(best_new_coverage)) or
             (ratio == best_ratio and len(new_coverage) == len(best_new_coverage) and cost < best_site[2])):
                 best_ratio = ratio
                 best_site = (site_id, covered_bgrys, cost)
                 best_new_coverage = new_coverage
 
-        # Step 2: Safety check for unachievable configurations
-        # If U is not empty but no site provides new coverage, the problem is unsolvable
         if best_site is None:
             print("\n[WARNING]: Total coverage impossible with current candidate sites!")
             print(f"Uncovered barangays: {U}")
             break
 
-        # Step 3: State Update
         site_id, covered_bgrys, cost = best_site
-        
-        print(f"\nSelected site {site_id}: ₱{cost:,.2f} covering {len(best_new_coverage)} new barangay(s)")
-        
-        # Record the breakdown data before updating U (crucial for your UI report)
+
         approved_sites.append({
             "site_id": site_id,
             "cost": cost,
             "total_covered": list(covered_bgrys),
             "unique_contribution": list(best_new_coverage)
         })
-        
-        # Remove newly covered barangays from Set U
-        U.difference_update(best_new_coverage)
-        
-        # Remove the chosen site from the pool of remaining candidates
-        candidates = [c for c in candidates if c[0] != site_id]
-        
-        iteration += 1
 
-    # Step 4: Populate the Unapproved Site Report for the remaining rejected sites
+        U.difference_update(best_new_coverage)
+        candidates = [c for c in candidates if c[0] != site_id]
+
     for site_id, covered_bgrys, cost in candidates:
         rejected_sites_report.append({
             "site_id": site_id,
@@ -100,22 +75,19 @@ def display_results(approved_sites, rejected_sites_report, total_barangays):
     print("\n" + "="*70)
     print("TOWERWISE OPTIMIZATION RESULTS")
     print("="*70)
-    
-    # Summary
+
     total_cost = sum(site["cost"] for site in approved_sites)
     total_sites = len(approved_sites)
-    
-    # Calculate unique coverage
+
     all_covered = set()
     for site in approved_sites:
         all_covered.update(site["unique_contribution"])
-    
+
     print("\nSummary:")
     print(f"  - Total approved sites: {total_sites}")
     print(f"  - Total cost: ₱{total_cost:,.2f}")
     print(f"  - Barangays covered: {len(all_covered)}/{total_barangays}")
-    
-    # Per-site breakdown
+
     print(f"\nApproved sites (in selection order):")
     print("-"*70)
     for i, site in enumerate(approved_sites, 1):
@@ -124,8 +96,7 @@ def display_results(approved_sites, rejected_sites_report, total_barangays):
         print(f"    Total barangays covered: {len(site['total_covered'])}")
         print(f"    Uniquely contributes to: {', '.join(site['unique_contribution'])}")
         print(f"    Full coverage: {', '.join(site['total_covered'])}")
-    
-    # Unapproved sites report
+
     if rejected_sites_report:
         print(f"\nUnapproved sites:")
         print("-"*70)
@@ -134,7 +105,7 @@ def display_results(approved_sites, rejected_sites_report, total_barangays):
             print(f"\n  Site: {site['site_id']}")
             print(f"    Cost: ₱{site['cost']:,.2f}")
             print(f"    Would cover: {', '.join(site['covered_barangays'])}")
-    
+
     print("\n" + "="*70)
 
 
@@ -143,24 +114,23 @@ def validate_input_data(data):
     Validate the JSON input structure.
     """
     required_fields = ["barangays", "candidate_sites"]
-    
+
     for field in required_fields:
         if field not in data:
             raise ValueError(f"Missing required field: '{field}'")
-    
+
     if not isinstance(data["barangays"], list):
         raise ValueError("'barangays' must be a list")
-    
+
     if not isinstance(data["candidate_sites"], list):
         raise ValueError("'candidate_sites' must be a list")
-    
+
     if len(data["barangays"]) == 0:
         raise ValueError("At least one barangay must be specified")
-    
+
     if len(data["candidate_sites"]) == 0:
         raise ValueError("At least one candidate site must be specified")
-    
-    # Validate each candidate site
+
     for i, site in enumerate(data["candidate_sites"]):
         if "id" not in site:
             raise ValueError(f"Candidate site {i} missing 'id' field")
@@ -168,51 +138,37 @@ def validate_input_data(data):
             raise ValueError(f"Candidate site {site.get('id', i)} missing 'covered_barangays' field")
         if "cost" not in site:
             raise ValueError(f"Candidate site {site.get('id', i)} missing 'cost' field")
-        
+
         if not isinstance(site["covered_barangays"], list):
             raise ValueError(f"Candidate site {site['id']}: 'covered_barangays' must be a list")
-        
+
         if not isinstance(site["cost"], (int, float)) or site["cost"] <= 0:
             raise ValueError(f"Candidate site {site['id']}: 'cost' must be a positive number")
-    
+
     return True
 
 
 def load_from_json(filepath):
     """
     Load the problem configuration from a JSON file.
+    Raises exceptions instead of calling sys.exit() so callers can handle errors.
     """
-    try:
-        with open(filepath, 'r', encoding='utf-8') as file:
-            data = json.load(file)
-        
-        validate_input_data(data)
-        
-        # Extract barangays
-        barangays = data["barangays"]
-        
-        # Extract candidate sites and convert to tuple format
-        candidate_sites = []
-        for site in data["candidate_sites"]:
-            candidate_sites.append((
-                site["id"],
-                frozenset(site["covered_barangays"]),
-                float(site["cost"])
-            ))
-        
-        return barangays, candidate_sites
-    
-    except FileNotFoundError:
-        print(f"Error: File '{filepath}' not found.")
-        sys.exit(1)
-    except json.JSONDecodeError as e:
-        print(f"Error: Invalid JSON format in '{filepath}'.")
-        print(f"Details: {e}")
-        sys.exit(1)
-    except ValueError as e:
-        print(f"Error: Invalid data structure in '{filepath}'.")
-        print(f"Details: {e}")
-        sys.exit(1)
+    with open(filepath, 'r', encoding='utf-8') as file:
+        data = json.load(file)
+
+    validate_input_data(data)
+
+    barangays = data["barangays"]
+
+    candidate_sites = []
+    for site in data["candidate_sites"]:
+        candidate_sites.append((
+            site["id"],
+            frozenset(site["covered_barangays"]),
+            float(site["cost"])
+        ))
+
+    return barangays, candidate_sites
 
 
 def save_results_to_json(approved_sites, rejected_sites, output_filepath):
@@ -225,13 +181,11 @@ def save_results_to_json(approved_sites, rejected_sites, output_filepath):
         "total_cost": sum(site["cost"] for site in approved_sites),
         "total_sites": len(approved_sites)
     }
-    
-    try:
-        with open(output_filepath, 'w', encoding='utf-8') as file:
-            json.dump(results, file, indent=2, ensure_ascii=False)
-        print(f"\nResults saved to: {output_filepath}")
-    except Exception as e:
-        print(f"Warning: Could not save results to file. Error: {e}")
+
+    with open(output_filepath, 'w', encoding='utf-8') as file:
+        json.dump(results, file, indent=2, ensure_ascii=False)
+
+    print(f"Results saved to: {output_filepath}")
 
 
 def create_sample_json(filepath):
@@ -263,13 +217,42 @@ def create_sample_json(filepath):
             }
         ]
     }
-    
-    try:
-        with open(filepath, 'w', encoding='utf-8') as file:
-            json.dump(sample_data, file, indent=2, ensure_ascii=False)
-        print(f"Sample JSON file created at: {filepath}")
-    except Exception as e:
-        print(f"Error creating sample file: {e}")
+
+    with open(filepath, 'w', encoding='utf-8') as file:
+        json.dump(sample_data, file, indent=2, ensure_ascii=False)
+
+    print(f"Sample config created at: {filepath}")
+
+
+def list_data_files():
+    """
+    List available .json files in the data/ folder.
+    Returns a list of filenames, or an empty list if the folder doesn't exist.
+    """
+    data_dir = Path("data")
+    if not data_dir.exists():
+        return []
+    return sorted(f.name for f in data_dir.glob("*.json"))
+
+
+def prompt_for_filename():
+    """
+    Show available files in data/ and prompt until a valid filename is entered.
+    """
+    available = list_data_files()
+
+    if available:
+        print("\nAvailable configs in data/:")
+        for f in available:
+            print(f"  - {f}")
+    else:
+        print("\n(No .json files found in data/ yet.)")
+
+    while True:
+        filename = input("\nEnter filename (e.g., config.json): ").strip()
+        if filename:
+            return filename
+        print("Filename cannot be empty. Please try again.")
 
 
 def main():
@@ -280,64 +263,101 @@ def main():
     print("TOWERWISE: Cell Tower Placement Optimizer")
     print("Weighted Set Cover - Greedy Approximation Algorithm")
     print("="*70)
-    
-    # Check command line arguments
+
+    # --- Load config ---
     if len(sys.argv) > 1:
-        json_file = sys.argv[1]
-        print(f"\nLoading configuration from: {json_file}")
-        barangays, candidate_sites = load_from_json(json_file)
+        # CLI mode: accept a full path or just a filename (checked in data/ if not found directly)
+        arg = sys.argv[1]
+        filepath = Path(arg) if Path(arg).exists() else Path("data") / arg
+        print(f"\nLoading configuration from: {filepath}")
+        try:
+            barangays, candidate_sites = load_from_json(filepath)
+        except FileNotFoundError:
+            print(f"Error: '{filepath}' not found.")
+            sys.exit(1)
+        except json.JSONDecodeError as e:
+            print(f"Error: Invalid JSON in '{filepath}'.\nDetails: {e}")
+            sys.exit(1)
+        except ValueError as e:
+            print(f"Error: Invalid data in '{filepath}'.\nDetails: {e}")
+            sys.exit(1)
     else:
-        # Interactive mode - ask for file path
-        print("\nNo JSON file provided.")
-        print("Usage: python towerwise.py <config_file.json>")
+        # Interactive mode
         print("\nOptions:")
-        print("  1. Enter path to JSON configuration file")
-        print("  2. Create a sample JSON file to use as template")
-        
-        choice = input("\nChoose option (1 or 2): ").strip()
-        
+        print("  1. Run optimizer with a config from data/")
+        print("  2. Create a sample config in data/")
+
+        while True:
+            choice = input("\nChoose option (1 or 2): ").strip()
+            if choice in ("1", "2"):
+                break
+            print("Please enter 1 or 2.")
+
         if choice == "2":
-            sample_file = input("Enter filename for sample (e.g., sample_config.json): ").strip()
-            if not sample_file:
-                sample_file = "towerwise_sample.json"
-            create_sample_json(sample_file)
-            print(f"\nEdit '{sample_file}' with your data, then run:")
-            print(f"python towerwise.py {sample_file}")
+            available = list_data_files()
+            if available:
+                print("\nExisting configs in data/:")
+                for f in available:
+                    print(f"  - {f}")
+
+            while True:
+                sample_file = input("\nEnter filename for sample (default: towerwise_sample.json): ").strip()
+                if not sample_file:
+                    sample_file = "towerwise_sample.json"
+                if not sample_file.endswith(".json"):
+                    sample_file += ".json"
+                break
+
+            os.makedirs("data", exist_ok=True)
+            dest = os.path.join("data", sample_file)
+            try:
+                create_sample_json(dest)
+                print(f"\nEdit '{dest}' with your data, then run:")
+                print(f"  python towerwise.py {sample_file}")
+            except Exception as e:
+                print(f"Error creating sample file: {e}")
             return
+
         else:
-            json_file = input("Enter path to JSON configuration file: ").strip()
-            if not json_file:
-                print("Error: No file specified.")
-                return
-            barangays, candidate_sites = load_from_json(json_file)
-    
-    # Display loaded data summary
-    print(f"\nLoaded {len(barangays)} barangays:")
-    for bgry in barangays:
-        print(f"  - {bgry}")
-    
-    print(f"\nLoaded {len(candidate_sites)} candidate sites:")
-    for site_id, covered, cost in candidate_sites:
-        print(f"  - {site_id}: ₱{cost:,.2f} - covers {len(covered)} barangay(s)")
-    
-    # Run optimizer
+            filename = prompt_for_filename()
+            filepath = Path("data") / filename
+            try:
+                barangays, candidate_sites = load_from_json(filepath)
+            except FileNotFoundError:
+                print(f"\nError: '{filepath}' not found. Check the filename and try again.")
+                sys.exit(1)
+            except json.JSONDecodeError as e:
+                print(f"\nError: Invalid JSON in '{filepath}'.\nDetails: {e}")
+                sys.exit(1)
+            except ValueError as e:
+                print(f"\nError: Invalid data in '{filepath}'.\nDetails: {e}")
+                sys.exit(1)
+
+    # --- Run optimizer ---
+    print(f"\nLoaded {len(barangays)} barangay(s) and {len(candidate_sites)} candidate site(s).")
     print("\n" + "="*70)
     print("RUNNING GREEDY OPTIMIZATION...")
     print("="*70)
-    
+
     approved_sites, rejected_sites = run_towerwise_optimizer(barangays, candidate_sites)
-    
-    # Display results
+
     display_results(approved_sites, rejected_sites, len(barangays))
-    
-    # Ask to save results
-    save_choice = input("\nSave results to JSON file? (y/n): ").strip().lower()
+
+    # --- Auto-save results ---
+    input_stem = Path(filepath).stem if 'filepath' in dir() else "results"
+    default_output = f"results_{input_stem}.json"
+
+    save_choice = input(f"\nSave results to JSON? (default: {default_output}) [y/n]: ").strip().lower()
     if save_choice == 'y':
-        output_file = input("Enter output filename (e.g., results.json): ").strip()
-        if not output_file:
-            output_file = "towerwise_results.json"
-        save_results_to_json(approved_sites, rejected_sites, output_file)
-    
+        custom = input(f"Custom filename? (press Enter to use '{default_output}'): ").strip()
+        output_file = custom if custom else default_output
+        if not output_file.endswith(".json"):
+            output_file += ".json"
+        try:
+            save_results_to_json(approved_sites, rejected_sites, output_file)
+        except Exception as e:
+            print(f"Warning: Could not save results. Error: {e}")
+
     print("\nTowerWise optimization complete!")
 
 
