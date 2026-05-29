@@ -1,0 +1,261 @@
+{
+  "barangays": [
+    "Barangay 1", "Barangay 2", "Barangay 3", "Barangay 4", "Barangay 5",
+    "Barangay 6", "Barangay 7", "Barangay 8", "Barangay 9", "Barangay 10",
+    "Barangay 11", "Barangay 12", "Barangay 13", "Barangay 14", "Barangay 15",
+    "Barangay 16", "Barangay 17", "Barangay 18", "Barangay 19", "Barangay 20",
+    "Barangay 21", "Barangay 22", "Barangay 23", "Barangay 24", "Barangay 25",
+    "Barangay 26", "Barangay 27", "Barangay 28", "Barangay 29", "Barangay 30",
+    "Barangay 31", "Barangay 32", "Barangay 33", "Barangay 34", "Barangay 35",
+    "Barangay 36", "Barangay 37", "Barangay 38", "Barangay 39", "Barangay 40",
+    "Barangay 41", "Barangay 42", "Barangay 43", "Barangay 44", "Barangay 45",
+    "Barangay 46", "Barangay 47", "Barangay 48", "Barangay 49", "Barangay 50"
+  ],
+  "candidate_sites": [
+    {
+      "id": "Site A",
+      "covered_barangays": [
+        "Barangay 1", "Barangay 2", "Barangay 3", "Barangay 4", "Barangay 5",
+        "Barangay 6", "Barangay 7", "Barangay 8"
+      ],
+      "cost": 1500000
+    },
+    {
+      "id": "Site B",
+      "covered_barangays": [
+        "Barangay 5", "Barangay 6", "Barangay 7", "Barangay 8",
+        "Barangay 9", "Barangay 10", "Barangay 11", "Barangay 12"
+      ],
+      "cost": 1400000
+    },
+    {
+      "id": "Site C",
+      "covered_barangays": [
+        "Barangay 9", "Barangay 10", "Barangay 11", "Barangay 12",
+        "Barangay 13", "Barangay 14", "Barangay 15", "Barangay 16"
+      ],
+      "cost": 1300000
+    },
+    {
+      "id": "Site D",
+      "covered_barangays": [
+        "Barangay 13", "Barangay 14", "Barangay 15", "Barangay 16",
+        "Barangay 17", "Barangay 18", "Barangay 19", "Barangay 20"
+      ],
+      "cost": 1250000
+    },
+    {
+      "id": "Site E",
+      "covered_barangays": [
+        "Barangay 17", "Barangay 18", "Barangay 19", "Barangay 20",
+        "Barangay 21", "Barangay 22", "Barangay 23", "Barangay 24"
+      ],
+      "cost": 1200000
+    },
+    {
+      "id": "Site F",
+      "covered_barangays": [
+        "Barangay 21", "Barangay 22", "Barangay 23", "Barangay 24",
+        "Barangay 25", "Barangay 26", "Barangay 27", "Barangay 28"
+      ],
+      "cost": 1150000
+    },
+    {
+      "id": "Site G",
+      "covered_barangays": [
+        "Barangay 25", "Barangay 26", "Barangay 27", "Barangay 28",
+        "Barangay 29", "Barangay 30", "Barangay 31", "Barangay 32"
+      ],
+      "cost": 1100000
+    },
+    {
+      "id": "Site H",
+      "covered_barangays": [
+        "Barangay 29", "Barangay 30", "Barangay 31", "Barangay 32",
+        "Barangay 33", "Barangay 34", "Barangay 35", "Barangay 36"
+      ],
+      "cost": 1050000
+    },
+    {
+      "id": "Site I",
+      "covered_barangays": [
+        "Barangay 33", "Barangay 34", "Barangay 35", "Barangay 36",
+        "Barangay 37", "Barangay 38", "Barangay 39", "Barangay 40"
+      ],
+      "cost": 1000000
+    },
+    {
+      "id": "Site J",
+      "covered_barangays": [
+        "Barangay 37", "Barangay 38", "Barangay 39", "Barangay 40",
+        "Barangay 41", "Barangay 42", "Barangay 43", "Barangay 44"
+      ],
+      "cost": 950000
+    },
+    {
+      "id": "Site K",
+      "covered_barangays": [
+        "Barangay 41", "Barangay 42", "Barangay 43", "Barangay 44",
+        "Barangay 45", "Barangay 46", "Barangay 47", "Barangay 48"
+      ],
+      "cost": 900000
+    },
+    {
+      "id": "Site L",
+      "covered_barangays": [
+        "Barangay 45", "Barangay 46", "Barangay 47", "Barangay 48",
+        "Barangay 49", "Barangay 50"
+      ],
+      "cost": 700000
+    },
+    {
+      "id": "Site M",
+      "covered_barangays": [
+        "Barangay 1", "Barangay 2", "Barangay 3", "Barangay 4",
+        "Barangay 49", "Barangay 50"
+      ],
+      "cost": 650000
+    },
+    {
+      "id": "Site N",
+      "covered_barangays": [
+        "Barangay 2", "Barangay 12", "Barangay 22", "Barangay 32",
+        "Barangay 42", "Barangay 50"
+      ],
+      "cost": 900000
+    },
+    {
+      "id": "Site O",
+      "covered_barangays": [
+        "Barangay 1", "Barangay 11", "Barangay 21", "Barangay 31",
+        "Barangay 41", "Barangay 49"
+      ],
+      "cost": 850000
+    },
+    {
+      "id": "Site P",
+      "covered_barangays": [
+        "Barangay 5", "Barangay 10", "Barangay 15", "Barangay 20",
+        "Barangay 25", "Barangay 30", "Barangay 35", "Barangay 40"
+      ],
+      "cost": 1200000
+    },
+    {
+      "id": "Site Q",
+      "covered_barangays": [
+        "Barangay 6", "Barangay 16", "Barangay 26", "Barangay 36",
+        "Barangay 46"
+      ],
+      "cost": 600000
+    },
+    {
+      "id": "Site R",
+      "covered_barangays": [
+        "Barangay 7", "Barangay 17", "Barangay 27", "Barangay 37",
+        "Barangay 47"
+      ],
+      "cost": 580000
+    },
+    {
+      "id": "Site S",
+      "covered_barangays": [
+        "Barangay 8", "Barangay 18", "Barangay 28", "Barangay 38",
+        "Barangay 48"
+      ],
+      "cost": 560000
+    },
+    {
+      "id": "Site T",
+      "covered_barangays": [
+        "Barangay 9", "Barangay 19", "Barangay 29", "Barangay 39",
+        "Barangay 49"
+      ],
+      "cost": 540000
+    },
+    {
+      "id": "Site U",
+      "covered_barangays": [
+        "Barangay 3", "Barangay 13", "Barangay 23", "Barangay 33",
+        "Barangay 43"
+      ],
+      "cost": 520000
+    },
+    {
+      "id": "Site V",
+      "covered_barangays": [
+        "Barangay 4", "Barangay 14", "Barangay 24", "Barangay 34",
+        "Barangay 44"
+      ],
+      "cost": 500000
+    },
+    {
+      "id": "Site W",
+      "covered_barangays": [
+        "Barangay 1", "Barangay 5", "Barangay 9", "Barangay 13",
+        "Barangay 17", "Barangay 21", "Barangay 25", "Barangay 29",
+        "Barangay 33", "Barangay 37"
+      ],
+      "cost": 1800000
+    },
+    {
+      "id": "Site X",
+      "covered_barangays": [
+        "Barangay 2", "Barangay 6", "Barangay 10", "Barangay 14",
+        "Barangay 18", "Barangay 22", "Barangay 26", "Barangay 30",
+        "Barangay 34", "Barangay 38"
+      ],
+      "cost": 1750000
+    },
+    {
+      "id": "Site Y",
+      "covered_barangays": [
+        "Barangay 3", "Barangay 7", "Barangay 11", "Barangay 15",
+        "Barangay 19", "Barangay 23", "Barangay 27", "Barangay 31",
+        "Barangay 35", "Barangay 39"
+      ],
+      "cost": 1700000
+    },
+    {
+      "id": "Site Z",
+      "covered_barangays": [
+        "Barangay 4", "Barangay 8", "Barangay 12", "Barangay 16",
+        "Barangay 20", "Barangay 24", "Barangay 28", "Barangay 32",
+        "Barangay 36", "Barangay 40"
+      ],
+      "cost": 1650000
+    },
+    {
+      "id": "Site AA",
+      "covered_barangays": [
+        "Barangay 41", "Barangay 42", "Barangay 43", "Barangay 44",
+        "Barangay 45", "Barangay 46", "Barangay 47", "Barangay 48",
+        "Barangay 49", "Barangay 50"
+      ],
+      "cost": 1400000
+    },
+    {
+      "id": "Site BB",
+      "covered_barangays": [
+        "Barangay 1", "Barangay 2", "Barangay 3", "Barangay 4",
+        "Barangay 5", "Barangay 6", "Barangay 7", "Barangay 8",
+        "Barangay 9", "Barangay 10"
+      ],
+      "cost": 1350000
+    },
+    {
+      "id": "Site CC",
+      "covered_barangays": [
+        "Barangay 10", "Barangay 20", "Barangay 30", "Barangay 40",
+        "Barangay 50"
+      ],
+      "cost": 480000
+    },
+    {
+      "id": "Site DD",
+      "covered_barangays": [
+        "Barangay 11", "Barangay 22", "Barangay 33", "Barangay 44"
+      ],
+      "cost": 420000
+    }
+  ]
+}

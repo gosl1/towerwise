@@ -6,14 +6,14 @@
       "total_covered": [
         "Barangay 2",
         "Barangay 4",
-        "Barangay 3",
-        "Barangay 5"
+        "Barangay 5",
+        "Barangay 3"
       ],
       "unique_contribution": [
-        "Barangay 2",
         "Barangay 3",
-        "Barangay 4",
-        "Barangay 5"
+        "Barangay 2",
+        "Barangay 5",
+        "Barangay 4"
       ]
     },
     {
@@ -35,8 +35,8 @@
       "cost": 800000.0,
       "covered_barangays": [
         "Barangay 2",
-        "Barangay 3",
-        "Barangay 1"
+        "Barangay 1",
+        "Barangay 3"
       ],
       "reason": "Redundant coverage (All target barangays already served by selected sites)"
     },
@@ -45,8 +45,8 @@
       "cost": 500000.0,
       "covered_barangays": [
         "Barangay 6",
-        "Barangay 4",
-        "Barangay 5"
+        "Barangay 5",
+        "Barangay 4"
       ],
       "reason": "Redundant coverage (All target barangays already served by selected sites)"
     }

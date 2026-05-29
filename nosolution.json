@@ -1,0 +1,15 @@
+{
+  "barangays": ["Barangay 1", "Barangay 2", "Barangay 3", "Barangay 4", "Barangay 5"],
+  "candidate_sites": [
+    {
+      "id": "Site A",
+      "covered_barangays": ["Barangay 1", "Barangay 2"],
+      "cost": 400000
+    },
+    {
+      "id": "Site B",
+      "covered_barangays": ["Barangay 3", "Barangay 4"],
+      "cost": 500000
+    }
+  ]
+}
