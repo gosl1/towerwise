@@ -1,0 +1,10 @@
+{
+  "barangays": ["Barangay 1"],
+  "candidate_sites": [
+    {
+      "id": "Site A",
+      "covered_barangays": ["Barangay 1"],
+      "cost": 500000
+    }
+  ]
+}
